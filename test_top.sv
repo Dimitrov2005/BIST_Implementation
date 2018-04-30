@@ -29,6 +29,6 @@ STAC stc(.TMS(iface1.TMS),
      begin
 	uvm_config_db #(virtual iface)::set  (null,"","viface",viface);
 	run_test("test");	
-	#1000 $finish();
+	#10000 $finish();
      end
 endmodule:top
