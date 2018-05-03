@@ -13,6 +13,7 @@ class test extends uvm_test;
 	 bit [SIZE_TDR2-1:0] WSI2='b0;
 	 bit [7:0]  ADDR2=ADDR_TDR2;
 	 bit [SIZE_TDR1-1:0]	    DEFTDR1=DEF_VAL_TDR1;
+	 bit [SIZE_TDR2-1:0]	    DEFTDR2=DEF_VAL_TDR2;
 	 bit [32:0]	    CAPTDR2=8'hca;
 	 bit 	    ROTDR2=RO_TDR2;
 	 bit 	    ROTDR1=RO_TDR1;
@@ -67,7 +68,8 @@ class test extends uvm_test;
 	       {>>33{seq.WSI}}=33'b0;
 	       seq.ADDR=ADDR2; 
 	       env.agent.mon.RO=ROTDR2;
-	       {<<{env.agent.mon.CAPTDR}}=CAPTDR2;
+		   {>>{env.agent.mon.DEFTDR}}=DEFTDR2;
+	       {>>{env.agent.mon.CAPTDR}}=CAPTDR2;
 	       seq.start(env.agent.seq);
 	    end 
 	    begin

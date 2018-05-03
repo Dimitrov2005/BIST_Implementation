@@ -18,8 +18,8 @@ class Sequence extends uvm_sequence#(Transaction);
 	      tr=new("tr");
 	      start_item(tr);
 	      begin
-	      tr.WSI=WSI;
-	      tr.ADDR=ADDR;
+			tr.WSI=WSI;
+			tr.ADDR=ADDR;
 	      end
 	      
 	      finish_item(tr);
