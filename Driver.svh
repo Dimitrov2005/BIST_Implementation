@@ -3,8 +3,9 @@ class Driver extends uvm_driver #(Transaction);
    `uvm_component_utils(Driver)
      virtual iface viface;
    int 	     i;
+   int 		 drvShiftCnt; //driver shift counter, used in monitor for checkers
    bit 	     WSI[];
-
+	
    function new(string name, uvm_component parent);
       super.new(name,parent);
    endfunction; // new
@@ -48,13 +49,14 @@ class Driver extends uvm_driver #(Transaction);
 		
 		  for(i=0;i<(tr.WSI.size());i++)
 		    begin	
-			//$display("WSI =%p  wsi size = %d \n",tr.WSI,tr.WSI.size());
+			//$display("WSI =%p shift number %d  time = %t\n",tr.WSI,i,$time());
 		       viface.TMS<=0;
 		       @(negedge viface.TCLK)
-			 
+			   
 			 viface.WSI<=tr.WSI[i];
 		    end
-
+			drvShiftCnt=tr.WSI.size();
+			//$display("++++++++++drvShiftCnt++++++++++++ = %d ",drvShiftCnt);
 		viface.TMS<=1;
 		@(negedge viface.TCLK) viface.TMS<=1;
 		@(negedge viface.TCLK) viface.TMS<=0;
