@@ -5,20 +5,19 @@ input
 	 TRESETN,
 	 WSI,
 output 
-	 WSO
-	 
+	 WSO,
+	 CaptureDR_neg,
+	 ShiftDR_neg,
+	 UpdateDR,
+	 CaptureIR_neg,
+	 ShiftIR_neg,
+	 UpdateIR
 );
 
    wire 	    CaptureDR;
    wire 	    ShiftDR;
-   wire 	    UpdateDR;
    wire 	    CaptureIR;
    wire 	    ShiftIR;
-   wire 	    UpdateIR;
-   wire 	    CaptureDR_neg;
-   wire 	    ShiftDR_neg;
-   wire 	    CaptureIR_neg;
-   wire 	    ShiftIR_neg;
    wire 	    en1;
    wire 	    en2;
    wire 	    si1_mux;
