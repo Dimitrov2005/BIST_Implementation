@@ -1,8 +1,9 @@
-class Environment extends uvm_env;
-   `uvm_component_utils(Environment);
+class jtag_environment extends uvm_env;
+   `uvm_component_utils(jtag_environment);
 
-   env_config env_cfg;
+   jtag_env_config jtag_env_cfg;
    jtag_agent jtag_agnt;
+   fuse_env_config fuse_env_cfg;
    fuse_agent fuse_agnt;
    Scoreboard scb;
 
@@ -21,34 +22,34 @@ class Environment extends uvm_env;
 		end
 		
       
-		if(jenv_cfg.has_jtag_agent)
+		if(jtag_env_cfg.has_agent)
 		begin
-			//-------   SET JTAG AGENT CONFIG   --------//
+			//-------   GET JTAG AGENT CONFIG   --------//
 			uvm_config_db#(jtag_agent_config):: set
-				(this,"jtag_agnt*","jtag_agent_cfg",env_cfg.jtag_agent_cfg);
+				(this,"jtag_agnt*","jtag_agent_cfg",jtag_env_cfg.jtag_agent_cfg);
 			jtag_agnt=jtag_agent::type_id::create("jtag_agnt",this);
 		end
 		
-		if(env_cfg.has_jtag_scoreboard)
+		if(jtag_env_cfg.has_scoreboard)
 		begin 
 			$display("building scoreboard ___________ ");
 			scb=Scoreboard::type_id::create("scb",this);
 		end
 		
-		if(env_cfg.has_fuse_agent)
+		if(fuse_env_cfg.has_agent)
 		begin
-			//-------   SET FUSE AGENT CONFIG   --------//
+			//-------   GET FUSE AGENT CONFIG   --------//
 			uvm_config_db#(fuse_agent_config):: set
 				(this,"fuse_agnt*","fuse_agent_cfg",fuse_env_cfg.fuse_agent_cfg);
 			fuse_agnt=fuse_agent::type_id::create("fuse_agnt",this);
 		end
 		
-		if(env_cfg.has_fuse_scoreboard)
+		if(fuse_env_cfg.has_scoreboard)
 		begin 
 			$display("building scoreboard ___________ ");
 			scb=Scoreboard::type_id::create("scb",this);
 		end
-  
+   endfunction // build_phase 
    endfunction // build_phase 
    
    

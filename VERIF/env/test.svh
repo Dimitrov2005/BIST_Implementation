@@ -4,8 +4,10 @@ class test extends uvm_test;
 
      
       env_config env_cfg;
-      Sequence seq;
-      agent_config agent_cfg;
+      jtag_sequence jtag_seq;
+	  fuse_sequence fuse_seq;
+      jtag_agent_config jtag_agent_cfg;
+	  fuse_agent_config fuse_agent_cfg;
       Environment env;
 	 
 	 bit [SIZE_TDR1-1:0] WSI1='b0;
@@ -23,64 +25,76 @@ class test extends uvm_test;
 	 super.new(name,parent);
       endfunction // new
 
-      function void build_phase(uvm_phase phase);
-	 super.build_phase(phase);
+     function void build_phase(uvm_phase phase);
+		super.build_phase(phase);
 
-	 env_cfg=env_config::type_id::create("env_cfg",this);
-	 agent_cfg=agent_config::type_id::create("agent_cfg",this); 
-	 if(!uvm_config_db#(virtual iface)::get
-            (this,"","viface",agent_cfg.viface))
-	   begin
-	      `uvm_error("TINF","base_test iface1 not found");
-	   end
-	 env_cfg.agent_cfg=agent_cfg;  
-	 uvm_config_db#(env_config)::set
-	   (this,"*","env_cfg",env_cfg);
-	 env=Environment::type_id::create("env",this);
+		env_cfg=env_config::type_id::create("env_cfg",this);
+		jtag_agent_cfg=jtag_agent_config::type_id::create("jtag_agent_cfg",this);
+		fuse_agent_cfg=fuse_agent_config::type_id::create("fuse_agent_cfg",this);
+	 
+		if(!uvm_config_db#(virtual jtag_iface)::get
+            (this,"","jtag_viface",jtag_agent_cfg.jtag_viface))
+		begin
+			`uvm_error("TINF","base_test : jtag_iface not found");
+		end
+		
+		if(!uvm_config_db#(virtual fuse_iface)::get
+            (this,"","jtag_viface",fuse_agent_cfg.fuse_viface))
+		begin
+			`uvm_error("TINF","base_test : fuse_iface not found");
+		end
+		
+		env_cfg.jtag_agent_cfg=jtag_agent_cfg;  
+		env_cfg.fuse_agent_cfg=fuse_agent_cfg;
+		
+		uvm_config_db#(env_config)::set
+		(this,"*","env_cfg",env_cfg);
+		
+		env=Environment::type_id::create("env",this);
 	 
       endfunction // build_phase
 
 
       task run_phase(uvm_phase phase);
 	 
-			seq=Sequence::type_id::create("seq",this);
-			seq.num=1;
+			jtag_seq=jtag_sequence::type_id::create("jtag_seq",this);
+			jtag_seq.num=1;
 	 //override the number of transactions
 			phase.raise_objection(this);
 	    begin
-	       {>>17{seq.WSI}}=17'b0;
-	       seq.ADDR=ADDR1;
-	       {>>{env.agent.mon.DEFTDR}}=DEFTDR1;
-	       env.agent.mon.RO=ROTDR1;
-	       seq.start(env.agent.seq);
+	       {>>17{jtag_seq.WSI}}=17'b0;
+	       jtag_seq.ADDR=ADDR1;
+	       {>>{env.jtag_agnt.jtag_mon.DEFTDR}}=DEFTDR1;
+	       env.jtag_agnt.jtag_mon.RO=ROTDR1;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end
 	    begin
-	       {>>17{seq.WSI}}={17{1'b1}};
-	       seq.ADDR=ADDR1;
-	       seq.start(env.agent.seq);
+	       {>>17{jtag_seq.WSI}}={17{1'b1}};
+	       jtag_seq.ADDR=ADDR1;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end
 	    begin
-	       {>>17{seq.WSI}}=17'b0;
-	       seq.ADDR=ADDR1;
-	       seq.start(env.agent.seq);
+	       {>>17{jtag_seq.WSI}}=17'b0;
+	       jtag_seq.ADDR=ADDR1;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end
 	    begin
-	       {>>33{seq.WSI}}=33'b0;
-	       seq.ADDR=ADDR2; 
-	       env.agent.mon.RO=ROTDR2;
-		   {>>{env.agent.mon.DEFTDR}}=DEFTDR2;
-	       {>>{env.agent.mon.CAPTDR}}=CAPTDR2;
-	       seq.start(env.agent.seq);
+	       {>>33{jtag_seq.WSI}}=33'b0;
+	       jtag_seq.ADDR=ADDR2; 
+	       env.jtag_agnt.jtag_mon.RO=ROTDR2;
+		   {>>{env.jtag_agnt.jtag_mon.DEFTDR}}=DEFTDR2;
+	       {>>{env.jtag_agnt.jtag_mon.CAPTDR}}=CAPTDR2;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end 
 	    begin
-	       {>>33{seq.WSI}}={33{1'b1}};
-	       seq.ADDR=ADDR2;
-	       seq.start(env.agent.seq);
+	       {>>33{jtag_seq.WSI}}={33{1'b1}};
+	       jtag_seq.ADDR=ADDR2;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end
 	    begin
-	       {>>33{seq.WSI}}=33'b0;
-	       seq.ADDR=ADDR2;
-	       seq.start(env.agent.seq);
+	       {>>33{jtag_seq.WSI}}=33'b0;
+	       jtag_seq.ADDR=ADDR2;
+	       jtag_seq.start(env.jtag_agnt.jtag_seq);
 	    end 
 	    phase.drop_objection(this);
       endtask
